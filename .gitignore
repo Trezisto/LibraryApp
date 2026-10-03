@@ -6,7 +6,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 
 # SQLite database files
-data/
+/data/
+/backend/data/
 *.db
 *.db-shm
 *.db-wal
