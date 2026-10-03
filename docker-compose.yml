@@ -1,17 +1,30 @@
+version: '3.8'
+
 services:
   app:
-    image: 'home-library-backend:latest'
+    image: 'docker-spring-boot-postgres:latest'
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
-    container_name: home-library
+    container_name: app
+    depends_on:
+      - db
     environment:
-      - LIBRARY_DB_PATH=/data/library.db
-    volumes:
-      - library-data:/data
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8080:8080"
-    restart: unless-stopped
-
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 volumes:
-  library-data:
+  pgdata:
